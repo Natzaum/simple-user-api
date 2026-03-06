@@ -14,14 +14,4 @@ class Database
 
         return $this->dbh;
     }
-
-    public function query(string $sql): bool | PDOStatement
-    {   
-        if(!$this->dbh) {
-            echo 'Failed to connect';
-        }
-
-        $result = $this->dbh->query(query: $sql);
-        return $result;
-    }
 }

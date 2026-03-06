@@ -22,7 +22,9 @@ class UserController
             ]);
         }
 
-        $sth = $conn->query('SELECT * FROM users');
+        $sth = $conn->prepare('SELECT * FROM users');
+        $sth->execute();
+
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);
         return json_encode($result);
     }
