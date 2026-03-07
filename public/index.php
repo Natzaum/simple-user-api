@@ -1,5 +1,8 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json");
+
 require_once __DIR__ . '/../app/controllers/UserController.php';
 require_once __DIR__ . '/../app/core/Router.php';
 

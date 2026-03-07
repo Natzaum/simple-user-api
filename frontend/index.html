@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1>Users</h1>
+
+    <form id="createform">
+        <input type="text" id="name" placeholder="name" required>
+        <input type="text" id="email" placeholder="email" required>
+        <input type="text" id="username" placeholder="username" required>
+
+        <button type="submit" id="submitButton">Create</button>
+    </form>
+
+    <h2>Users list</h2>
+
+    <ul id="userList"></ul>
+
+    <button type="submit" id="getAllUsers" onclick="getUsers()">Get users</button>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
