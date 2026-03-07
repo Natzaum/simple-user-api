@@ -6,8 +6,8 @@ A simple PHP REST API for managing users, with a small vanilla JavaScript fronte
 
 - Custom PHP router (no framework)
 - MySQL database with PDO
-- Endpoints to list, create, and update users
-- Basic frontend to create users and fetch all users
+- Full CRUD operations: list, create, update, and delete users
+- Interactive frontend with auto-loading user list
 
 ## Project Structure
 
@@ -76,8 +76,8 @@ php -S localhost:8000 -t public
 5. Open the frontend:
 
 - Open `frontend/index.html` in your browser.
-- Use the form to create users.
-- Click "Get users" to list all users.
+- User list loads automatically on page load.
+- Use the forms to create, update, or delete users.
 
 ## API Base URL
 
@@ -139,6 +139,23 @@ Validation:
 
 - `id`, `name`, `email`, and `username` are required.
 
+### `DELETE /users`
+
+Deletes a user.
+
+Request body:
+
+```json
+{
+  "id": 1
+}
+```
+
+Validation:
+
+- `id` is required.
+- Returns 404 if user not found.
+
 ## cURL Examples
 
 Get all users:
@@ -163,6 +180,14 @@ curl -X PUT http://localhost:8000/users \
   -d '{"id":1,"name":"John Updated","email":"john@example.com","username":"johnd"}'
 ```
 
+Delete user:
+
+```bash
+curl -X DELETE http://localhost:8000/users \
+  -H "Content-Type: application/json" \
+  -d '{"id":1}'
+```
+
 ## Database Configuration
 
 Current connection settings in `app/config/Database.php`:
@@ -177,5 +202,6 @@ These values match `docker-compose.yml` defaults.
 ## Notes
 
 - Router uses exact URI matching from `$_SERVER['REQUEST_URI']`.
-- CORS headers are configured in `public/index.php`.
+- CORS headers are configured in `public/index.php` (supports GET, POST, PUT, DELETE).
 - Unknown routes return HTTP `404` with message `Route not found`.
+- Frontend displays user ID in the list for easy reference when updating or deleting.
