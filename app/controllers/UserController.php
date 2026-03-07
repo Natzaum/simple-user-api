@@ -43,9 +43,19 @@ class UserController
 
         $user = new User($conn);
 
-        $name = $data->name;
-        $email = $data->email;
-        $username = $data->username;
+        $name = trim($data->name);
+        $email = trim($data->email);
+        $username = trim($data->username);
+        
+        $email = str_replace(' ', '', $email);
+        $username = str_replace(' ', '', $username);
+
+        if(!$name || !$email || !$username) {
+            return json_encode([
+                'status' => false,
+                'message' => 'All fields are required'
+            ]);
+        }
 
         $user->postData(
             $name,
@@ -54,9 +64,9 @@ class UserController
         );
 
         return json_encode([
-            'name: ' => $name,
-            'email: ' => $email,
-            'username: ' => $username,
+            'name' => $name,
+            'email' => $email,
+            'username' => $username,
         ]);
     }
 }
