@@ -12,7 +12,7 @@ class UserController
         $this->dbh = new Database();
     }
 
-    public function index(): string
+    public function index()
     {
         $conn = $this->dbh->connect();
 
@@ -32,32 +32,31 @@ class UserController
     {
         $conn = $this->dbh->connect();
 
+        if(!$conn) {
+            return json_encode([
+                'status' => false,
+                'message' => 'Database connection failed',
+            ]);
+        }
+
         $data = json_decode(file_get_contents("php://input"));
+
+        $user = new User($conn);
 
         $name = $data->name;
         $email = $data->email;
         $username = $data->username;
 
-        if(!$conn) {
+        $user->postData(
+            $name,
+            $email,
+            $username,
+        );
+
         return json_encode([
-            'status' => false,
-            'message' => 'Database connection failed',
+            'name: ' => $name,
+            'email: ' => $email,
+            'username: ' => $username,
         ]);
-    }
-
-        $sth = $conn->prepare('INSERT INTO users(name, email, username) VALUES (:name, :email, :username)');
-        $sucess = $sth->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':username' => $username,
-        ]);
-
-        if($sucess) {
-            return json_encode([
-                'name: ' => $name,
-                'email: ' => $email,
-                'username: ' => $username,
-            ]);
-        }
     }
 }
