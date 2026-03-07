@@ -1,7 +1,7 @@
 <?php
 
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
@@ -34,6 +34,13 @@ $router->put('/users', function():void
     $controller = new UserController();
 
     echo $controller->update();
+});
+
+$router->delete('/users', function(): void
+{
+    $controller = new UserController();
+
+    echo $controller->delete();
 });
 
 $router->dispatch();

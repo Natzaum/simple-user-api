@@ -137,4 +137,41 @@ class UserController
             ]);
         }
     }
+
+
+    public function delete()
+    {
+        $conn = $this->dbh->connect();
+
+        if(!$conn) {
+            return json_encode([
+                'status' => false,
+                'message' => 'Database connection failed',
+            ]);
+        }
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        $user = new User($conn);
+
+        $id = $data->id;
+
+        try {
+            $user->deleteData(
+                $id,
+            );
+
+            return json_encode([
+                'status' => true,
+                'message' => 'User deleted successfully'
+            ]);
+        } catch(Exception $e) {
+            http_response_code(404);
+
+            return json_encode([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

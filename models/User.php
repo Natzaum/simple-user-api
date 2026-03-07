@@ -56,4 +56,21 @@ class User
 
         return true;
     }
+
+    public function deleteData($id)
+    {
+        $sth = $this->dbh->prepare(
+            'DELETE FROM users WHERE id = :id'
+        );
+
+        $sth->execute([
+            ':id' => $id,
+        ]);
+
+        if($sth->rowCount() === 0){
+            throw new Exception('User not found');
+        }
+
+        return true;
+    }
 }

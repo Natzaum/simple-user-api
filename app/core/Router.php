@@ -19,6 +19,11 @@ class Router
         $this->routes['PUT'][$uri] = $callback;
     }
 
+    public function delete(string $uri, callable $callback): void
+    {
+        $this->routes['DELETE'][$uri] = $callback;
+    }
+
     public function dispatch(): void
     {
         $method = $_SERVER['REQUEST_METHOD'];
