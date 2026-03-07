@@ -1,12 +1,20 @@
 # Simple User API (PHP)
 
-A minimal PHP API project with a custom router and MySQL database.
+A simple PHP REST API for managing users, with a small vanilla JavaScript frontend.
+
+## Features
+
+- Custom PHP router (no framework)
+- MySQL database with PDO
+- Endpoints to list, create, and update users
+- Basic frontend to create users and fetch all users
 
 ## Project Structure
 
 ```text
 simple-user-api/
   docker-compose.yml
+  README.md
   app/
     config/
       Database.php
@@ -14,76 +22,74 @@ simple-user-api/
       UserController.php
     core/
       Router.php
+  models/
+    User.php
   public/
     index.php
+  frontend/
+    index.html
+    app.js
+    style.css
 ```
 
 ## Requirements
 
-- PHP 8.0+ (project uses named arguments in `PDO` and `query` calls)
-- PHP extension `pdo_mysql` enabled
-- Docker + Docker Compose (for MySQL)
+- PHP 8.0+
+- PHP extension `pdo_mysql`
+- Docker + Docker Compose (for local MySQL)
 
-## What It Does
+## Quick Start
 
-- Registers one route: `GET /users`
-- Fetches all rows from `users` table
-- Returns JSON response
-
-## Setup
-
-1. Start MySQL with Docker Compose:
+1. Start MySQL:
 
 ```bash
 docker compose up -d
 ```
 
-2. Create the `users` table in MySQL:
+2. Create the `users` table:
 
 ```sql
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
+  username VARCHAR(100) NOT NULL UNIQUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
-3. (Optional) Insert sample data:
+3. Optional seed data:
 
 ```sql
-INSERT INTO users (name, email)
+INSERT INTO users (name, email, username)
 VALUES
-  ('Marco Paul', 'marco@example.com'),
-  ('Alice Paul', 'alice@example.com');
+  ('Marco Paul', 'marco@example.com', 'marcop'),
+  ('Alice Paul', 'alice@example.com', 'alicep');
 ```
 
-4. Start PHP built-in server from project root:
+4. Start the API server from project root:
 
 ```bash
 php -S localhost:8000 -t public
 ```
 
-5. Test endpoint:
+5. Open the frontend:
 
-```bash
-curl http://localhost:8000/users
-```
+- Open `frontend/index.html` in your browser.
+- Use the form to create users.
+- Click "Get users" to list all users.
 
-## Current Database Configuration
+## API Base URL
 
-Database connection is currently hardcoded in `app/config/Database.php`:
+`http://localhost:8000`
 
-- host: `localhost`
-- database: `simple-user-api`
-- username: `root`
-- password: `secret`
+## Endpoints
 
-## Route
+### `GET /users`
 
-- `GET /users` -> `UserController::index()`
+Returns all users.
 
-Expected successful response:
+Example response:
 
 ```json
 [
@@ -91,20 +97,85 @@ Expected successful response:
     "id": 1,
     "name": "Marco Paul",
     "email": "marco@example.com",
-    "created_at": "2026-03-05 10:00:00"
+    "username": "marcop"
   }
 ]
 ```
 
-## Notes
+### `POST /users`
 
-- `Router` matches exact URI from `$_SERVER['REQUEST_URI']`.
-- If a route is not found, API returns HTTP `404` with `Route not found`.
-- If database connection fails in controller, API returns:
+Creates a user.
+
+Request body:
 
 ```json
 {
-  "status": false,
-  "message": "Database connection failed"
+  "name": "John Doe",
+  "email": "john@example.com",
+  "username": "johnd"
 }
 ```
+
+Validation:
+
+- `name`, `email`, and `username` are required.
+
+### `PUT /users`
+
+Updates a user.
+
+Request body:
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com",
+  "username": "johnd"
+}
+```
+
+Validation:
+
+- `id`, `name`, `email`, and `username` are required.
+
+## cURL Examples
+
+Get all users:
+
+```bash
+curl http://localhost:8000/users
+```
+
+Create user:
+
+```bash
+curl -X POST http://localhost:8000/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"John Doe","email":"john@example.com","username":"johnd"}'
+```
+
+Update user:
+
+```bash
+curl -X PUT http://localhost:8000/users \
+  -H "Content-Type: application/json" \
+  -d '{"id":1,"name":"John Updated","email":"john@example.com","username":"johnd"}'
+```
+
+## Database Configuration
+
+Current connection settings in `app/config/Database.php`:
+
+- Host: `localhost`
+- Database: `simple-user-api`
+- Username: `root`
+- Password: `secret`
+
+These values match `docker-compose.yml` defaults.
+
+## Notes
+
+- Router uses exact URI matching from `$_SERVER['REQUEST_URI']`.
+- CORS headers are configured in `public/index.php`.
+- Unknown routes return HTTP `404` with message `Route not found`.
