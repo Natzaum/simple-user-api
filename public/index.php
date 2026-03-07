@@ -14,4 +14,11 @@ $router->get('/users', function(): void
     echo $controller->index();
 });
 
+$router->post('/users', function(): void
+{
+    $controller = new UserController();
+
+    echo $controller->create();
+});
+
 $router->dispatch();
