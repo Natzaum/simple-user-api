@@ -29,4 +29,11 @@ $router->post('/users', function(): void
     echo $controller->create();
 });
 
+$router->put('/users', function():void
+{
+    $controller = new UserController();
+
+    echo $controller->update();
+});
+
 $router->dispatch();

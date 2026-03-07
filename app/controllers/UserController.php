@@ -12,6 +12,7 @@ class UserController
         $this->dbh = new Database();
     }
 
+
     public function index()
     {
         $conn = $this->dbh->connect();
@@ -27,6 +28,7 @@ class UserController
         
         return json_encode($user->fetchAll());
     }
+
 
     public function create()
     {
@@ -51,6 +53,8 @@ class UserController
         $username = str_replace(' ', '', $username);
 
         if(!$name || !$email || !$username) {
+            http_response_code(400);
+
             return json_encode([
                 'status' => false,
                 'message' => 'All fields are required'
@@ -64,9 +68,73 @@ class UserController
         );
 
         return json_encode([
+            [
+                'status' => true,
+                'message' => 'User create successfully',
+            ],
             'name' => $name,
             'email' => $email,
             'username' => $username,
         ]);
+    }
+
+
+    public function update()
+    {
+        $conn = $this->dbh->connect();
+
+        if(!$conn) {
+            return json_encode([
+                'status' => false,
+                'message' => 'Database connection failed',
+            ]);
+        }
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        $user = new User($conn);
+
+        $id = $data->id;
+        $name = trim($data->name);
+        $email = trim($data->email);
+        $username = trim($data->username);
+        
+        $email = str_replace(' ', '', $email);
+        $username = str_replace(' ', '', $username);
+
+        if(!$id === null || !$name || !$email || !$username) {
+            http_response_code(400);
+
+            return json_encode([
+                'status' => false,
+                'message' => 'All fields are required'
+            ]);
+        }
+
+        try{
+            $user->updateData(
+                $id,
+                $name,
+                $email,
+                $username,
+            );
+
+            return json_encode([
+                [
+                    'status' => true,
+                    'message' => 'User updated successfully',
+                ],
+                'name' => $name,
+                'email' => $email,
+                'username' => $username,
+            ]);
+        } catch (Exception $e) {
+            http_response_code(404);
+
+            return json_encode([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }
