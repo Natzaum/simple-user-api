@@ -9,14 +9,14 @@ async function getAllUsers() {
 
     data.forEach(user => {
         const li = document.createElement('li')
-        li.textContent = `${user.name} - ${user.email} - ${user.username}`
+        li.textContent = `${user.id} - ${user.name} - ${user.email} - ${user.username}`
         list.appendChild(li)
     })
 }
 
-async function createUser(e) {
-    e.preventDefault()
+getAllUsers()
 
+async function createUser() {
     const name = document.getElementById('name').value
     const email = document.getElementById('email').value
     const username = document.getElementById('username').value
@@ -37,3 +37,45 @@ async function createUser(e) {
 }
 
 document.getElementById('createForm').addEventListener('submit', createUser)
+
+async function updateUser() {
+    const id = document.getElementById('updateId').value
+    const name = document.getElementById('updateName').value
+    const email = document.getElementById('updateEmail').value
+    const username = document.getElementById('updateUsername').value
+
+    await fetch(API_URL, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id,
+            name,
+            email,
+            username
+        })
+    })
+
+    alert('User updated successfully')
+}
+
+document.getElementById('updateForm').addEventListener('submit', updateUser)
+
+async function deleteUser() {
+    const id = document.getElementById('deleteId').value
+
+    await fetch(API_URL, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id
+        })
+    })
+
+    alert('User deleted successfully')
+}
+
+document.getElementById('deleteForm').addEventListener('submit', deleteUser)

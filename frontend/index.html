@@ -11,19 +11,35 @@
 <body>
     <h1>Users</h1>
 
+    <h2>Create user</h2>
     <form id="createForm">
         <input type="text" id="name" placeholder="name" required>
         <input type="text" id="email" placeholder="email" required>
         <input type="text" id="username" placeholder="username" required>
 
-        <button type="submit" id="submitButton">Create</button>
+        <button type="submit" id="createButton">Create</button>
+    </form>
+
+    <h2>Update user</h2>
+    <form id="updateForm">
+        <input type="text" id="updateId" placeholder="id" required>
+        <input type="text" id="updateName" placeholder="name" required>
+        <input type="text" id="updateEmail" placeholder="email" required>
+        <input type="text" id="updateUsername" placeholder="username" required>
+
+        <button type="submit" id="updateButton">Update</button>
+    </form>
+
+    <h2>Delete user</h2>
+    <form id="deleteForm">
+        <input type="text" id="deleteId" placeholder="id" required>
+
+        <button type="submit" id="deleteButton">Delete</button>
     </form>
 
     <h2>Users list</h2>
 
     <ul id="userList"></ul>
-
-    <button type="submit" id="getAllUsers" onclick="getAllUsers()">Get users</button>
 
     <script src="app.js"></script>
 </body>
