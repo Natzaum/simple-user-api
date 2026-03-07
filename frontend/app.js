@@ -1,6 +1,6 @@
 const API_URL = 'http://localhost:8000/users'
 
-async function getUsers() {
+async function getAllUsers() {
     const response = await fetch(API_URL)
     const data = await (response.json())
 
@@ -13,3 +13,27 @@ async function getUsers() {
         list.appendChild(li)
     })
 }
+
+async function createUser(e) {
+    e.preventDefault()
+
+    const name = document.getElementById('name').value
+    const email = document.getElementById('email').value
+    const username = document.getElementById('username').value
+
+    await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name,
+            email,
+            username
+        })
+    })
+
+    alert('User created successfully')
+}
+
+document.getElementById('createForm').addEventListener('submit', createUser)
