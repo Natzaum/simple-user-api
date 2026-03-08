@@ -26,7 +26,16 @@ class UserController
 
         $user = new User($conn);
         
-        return json_encode($user->fetchAll());
+        try {
+            return json_encode($user->fetchAll());
+        } catch(Exception $e) {
+            http_response_code(404);
+
+            return json_encode([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
 

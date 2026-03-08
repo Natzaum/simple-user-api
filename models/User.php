@@ -16,6 +16,10 @@ class User
 
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);
 
+        if($sth->rowCount() === 0){
+            throw new Exception('No users in the database');
+        }
+
         return $result;
     }
 
