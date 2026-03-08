@@ -14,33 +14,11 @@ require_once __DIR__ . '/../app/controllers/UserController.php';
 require_once __DIR__ . '/../app/core/Router.php';
 
 $router = new Router();
+$controller = new UserController();
 
-$router->get('/users', function(): void 
-{
-    $controller = new UserController();
-
-    echo $controller->index();
-});
-
-$router->post('/users', function(): void
-{
-    $controller = new UserController();
-
-    echo $controller->create();
-});
-
-$router->put('/users', function():void
-{
-    $controller = new UserController();
-
-    echo $controller->update();
-});
-
-$router->delete('/users', function(): void
-{
-    $controller = new UserController();
-
-    echo $controller->delete();
-});
+$router->get('/users', [$controller, 'index']);
+$router->post('/users', [$controller, 'create']);
+$router->put('/users/{id}', [$controller, 'update']);
+$router->delete('/users/{id}', [$controller, 'delete']);
 
 $router->dispatch();

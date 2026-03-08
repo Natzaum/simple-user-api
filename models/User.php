@@ -43,7 +43,7 @@ class User
         return true;
     }
 
-
+    
     public function updateData($id, $name, $email, $username, $password)
     {
         $sth = $this->dbh->prepare(

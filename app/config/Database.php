@@ -6,12 +6,17 @@ class Database
 
     public function connect(): PDO
     {
-        $this->dbh = new PDO(
-            dsn: 'mysql:host=localhost;dbname=simple-user-api', 
-            username:'root', 
-            password:'secret'
-        );
+        try {
+            $this->dbh = new PDO(
+                dsn: 'mysql:host=localhost;dbname=simple-user-api', 
+                username:'root', 
+                password:'secret'
+            );
+            $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        return $this->dbh;
+            return $this->dbh;
+        } catch (PDOException $e) {
+            throw new Exception('Database connection failed: ' . $e->getMessage());
+        }
     }
 }

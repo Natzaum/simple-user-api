@@ -27,13 +27,27 @@ class Router
     public function dispatch(): void
     {
         $method = $_SERVER['REQUEST_METHOD'];
-        $uri = $_SERVER['REQUEST_URI'];
+        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         if(isset($this->routes[$method][$uri])) {
-            call_user_func(callback: $this->routes[$method][$uri]);
-        } else {
-            http_response_code(response_code: 404);
-            echo 'Route not found';
+            echo call_user_func(callback: $this->routes[$method][$uri]);
+            return;
         }
+        
+        foreach ($this->routes[$method] as $route => $callback) {
+            $pattern = preg_replace('#\{[^/]+\}#', '([^/]+)', $route);
+            $pattern = "#^$pattern$#";
+
+            if (preg_match($pattern, $uri, $matches)) {
+
+                array_shift($matches);
+
+                echo call_user_func_array($callback, $matches);
+                return;
+            }
+        }
+
+        http_response_code(404);
+        echo 'Route not found';
     }
 }

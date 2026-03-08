@@ -16,18 +16,10 @@ class UserController
 
     public function index()
     {
-        $conn = $this->dbh->connect();
-
-        if(!$conn) {
-            return json_encode([
-                'status' => false,
-                'message' => 'Database connection failed',
-            ]);
-        }
-
-        $user = new User($conn);
-        
         try {
+            $conn = $this->dbh->connect();
+            $user = new User($conn);
+        
             return json_encode($user->fetchAll());
         } catch(Exception $e) {
             http_response_code(404);
@@ -42,26 +34,19 @@ class UserController
 
     public function create()
     {
-        $conn = $this->dbh->connect();
-
-        if(!$conn) {
-            return json_encode([
-                'status' => false,
-                'message' => 'Database connection failed',
-            ]);
-        }
-
         $data = json_decode(file_get_contents("php://input"), true);
 
-        $user = new User($conn);
-        $validator = new UserValidator();
+        try {
+            $conn = $this->dbh->connect();
 
-        $name = trim($data['name']);
-        $email = str_replace(' ', '', trim($data['email']));
-        $username = str_replace(' ', '', trim($data['username']));
-        $password = trim($data['password']);
+            $user = new User($conn);
+            $validator = new UserValidator();
 
-        try{
+            $name = trim($data['name']);
+            $email = str_replace(' ', '', trim($data['email']));
+            $username = str_replace(' ', '', trim($data['username']));
+            $password = trim($data['password']);
+
             $validator->validateCreate($data);
 
             if($user->emailExists($email)){
@@ -93,37 +78,27 @@ class UserController
     }
 
 
-    public function update()
+    public function update($id)
     {
-        $conn = $this->dbh->connect();
-
-        if(!$conn) {
-            return json_encode([
-                'status' => false,
-                'message' => 'Database connection failed',
-            ]);
-        }
-
         $data = json_decode(file_get_contents("php://input"), true);
 
-        $user = new User($conn);
+        try {
+            $conn = $this->dbh->connect();
+            $user = new User($conn);
+            $validator = new UserValidator();
 
-        $id = $data['id'];
-        $name = trim($data['name']);
-        $email = str_replace(' ', '', trim($data['email']));
-        $username = str_replace(' ', '', trim($data['username']));
-        $password = trim($data['password']);
+            $name = trim($data['name']);
+            $email = str_replace(' ', '', trim($data['email']));
+            $username = str_replace(' ', '', trim($data['username']));
+            $password = trim($data['password']);
 
-        if(!$id === null || !$name || !$email || !$username || !$password) {
-            http_response_code(400);
+            if($id === null || empty($name) || empty($email) || empty($username) || empty($password)) {
+                throw new Exception('All fields are required');
+            }
 
-            return json_encode([
-                'status' => false,
-                'message' => 'All fields are required'
-            ]);
-        }
+            $validator->validateCreate($data);
 
-        try{
+
             $user->updateData(
                 $id,
                 $name,
@@ -140,7 +115,7 @@ class UserController
                 'username' => $username,
             ]);
         } catch (Exception $e) {
-            http_response_code(404);
+            http_response_code(400);
 
             return json_encode([
                 'status' => false,
@@ -150,24 +125,16 @@ class UserController
     }
 
 
-    public function delete()
+    public function delete($id)
     {
-        $conn = $this->dbh->connect();
-
-        if(!$conn) {
-            return json_encode([
-                'status' => false,
-                'message' => 'Database connection failed',
-            ]);
-        }
-
-        $data = json_decode(file_get_contents("php://input"));
-
-        $user = new User($conn);
-
-        $id = $data->id;
-
         try {
+            $conn = $this->dbh->connect();
+            $user = new User($conn);
+
+            if($id === null) {
+                throw new Exception('User ID is required');
+            }
+
             $user->deleteData(
                 $id,
             );
