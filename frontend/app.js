@@ -4,7 +4,7 @@ async function getAllUsers() {
     const response = await fetch(API_URL)
     const data = await (response.json())
 
-    const list = document.getElementById('userList')
+    const list = document.getElementById('user-list')
     list.innerHTML = ""
 
     data.forEach(user => {
@@ -17,9 +17,10 @@ async function getAllUsers() {
 getAllUsers()
 
 async function createUser() {
-    const name = document.getElementById('name').value
-    const email = document.getElementById('email').value
-    const username = document.getElementById('username').value
+    const name = document.getElementById('create-name').value
+    const email = document.getElementById('create-email').value
+    const username = document.getElementById('create-username').value
+    const password = document.getElementById('create-password').value
 
     await fetch(API_URL, {
         method: 'POST',
@@ -29,20 +30,22 @@ async function createUser() {
         body: JSON.stringify({
             name,
             email,
-            username
+            username,
+            password,
         })
     })
 
     alert('User created successfully')
 }
 
-document.getElementById('createForm').addEventListener('submit', createUser)
+document.getElementById('create-form').addEventListener('submit', createUser)
 
 async function updateUser() {
-    const id = document.getElementById('updateId').value
-    const name = document.getElementById('updateName').value
-    const email = document.getElementById('updateEmail').value
-    const username = document.getElementById('updateUsername').value
+    const id = document.getElementById('update-id').value
+    const name = document.getElementById('update-name').value
+    const email = document.getElementById('update-email').value
+    const username = document.getElementById('update-username').value
+    const password = document.getElementById('update-password').value
 
     await fetch(API_URL, {
         method: 'PUT',
@@ -53,17 +56,18 @@ async function updateUser() {
             id,
             name,
             email,
-            username
+            username,
+            password,
         })
     })
 
     alert('User updated successfully')
 }
 
-document.getElementById('updateForm').addEventListener('submit', updateUser)
+document.getElementById('update-form').addEventListener('submit', updateUser)
 
 async function deleteUser() {
-    const id = document.getElementById('deleteId').value
+    const id = document.getElementById('delete-id').value
 
     await fetch(API_URL, {
         method: 'DELETE',
@@ -78,4 +82,4 @@ async function deleteUser() {
     alert('User deleted successfully')
 }
 
-document.getElementById('deleteForm').addEventListener('submit', deleteUser)
+document.getElementById('delete-form').addEventListener('submit', deleteUser)

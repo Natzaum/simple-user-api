@@ -23,27 +23,28 @@ class User
         return $result;
     }
 
-    public function postData($name, $email, $username)
+    public function postData($name, $email, $username, $password)
     {
         $sth = $this->dbh->prepare(
             'INSERT INTO users
-            SET name = :name, email = :email, username = :username'
+            SET name = :name, email = :email, username = :username, password = :password'
         );
 
         $sth->execute([
             ':name' => $name,
             ':email' => $email,
             ':username' => $username,
+            ':password' => password_hash($password, PASSWORD_DEFAULT),
         ]);
 
         return true;
     }
 
-    public function updateData($id, $name, $email, $username)
+    public function updateData($id, $name, $email, $username, $password)
     {
         $sth = $this->dbh->prepare(
             'UPDATE users 
-            SET name = :name, email = :email, username = :username 
+            SET name = :name, email = :email, username = :username, password = :password
             WHERE id = :id'
         );
 
@@ -52,6 +53,7 @@ class User
             ':name' => $name,
             ':email' => $email,
             ':username' => $username,
+            ':password' => password_hash($password, PASSWORD_DEFAULT),
         ]);
 
         if($sth->rowCount() === 0){

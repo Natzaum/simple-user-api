@@ -12,34 +12,36 @@
     <h1>Users</h1>
 
     <h2>Create user</h2>
-    <form id="createForm">
-        <input type="text" id="name" placeholder="name" required>
-        <input type="text" id="email" placeholder="email" required>
-        <input type="text" id="username" placeholder="username" required>
+    <form id="create-form">
+        <input type="text" id="create-name" placeholder="name" required>
+        <input type="text" id="create-email" placeholder="email" required>
+        <input type="text" id="create-username" placeholder="username" required>
+        <input type="password" id="create-password" placeholder="password" required>
 
-        <button type="submit" id="createButton">Create</button>
+        <button type="submit" id="create-button">Create</button>
     </form>
 
     <h2>Update user</h2>
-    <form id="updateForm">
-        <input type="text" id="updateId" placeholder="id" required>
-        <input type="text" id="updateName" placeholder="name" required>
-        <input type="text" id="updateEmail" placeholder="email" required>
-        <input type="text" id="updateUsername" placeholder="username" required>
+    <form id="update-form">
+        <input type="text" id="update-id" placeholder="id" required>
+        <input type="text" id="update-name" placeholder="name" required>
+        <input type="text" id="update-email" placeholder="email" required>
+        <input type="text" id="update-username" placeholder="username" required>
+        <input type="password" id="update-password" placeholder="password" required>
 
-        <button type="submit" id="updateButton">Update</button>
+        <button type="submit" id="update-button">Update</button>
     </form>
 
     <h2>Delete user</h2>
-    <form id="deleteForm">
-        <input type="text" id="deleteId" placeholder="id" required>
+    <form id="delete-form">
+        <input type="text" id="delete-id" placeholder="id" required>
 
-        <button type="submit" id="deleteButton">Delete</button>
+        <button type="submit" id="delete-button">Delete</button>
     </form>
 
     <h2>Users list</h2>
 
-    <ul id="userList"></ul>
+    <ul id="user-list"></ul>
 
     <script src="app.js"></script>
 </body>

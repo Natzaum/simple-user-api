@@ -57,6 +57,7 @@ class UserController
         $name = trim($data->name);
         $email = trim($data->email);
         $username = trim($data->username);
+        $password = trim($data->password);
         
         $email = str_replace(' ', '', $email);
         $username = str_replace(' ', '', $username);
@@ -74,6 +75,7 @@ class UserController
             $name,
             $email,
             $username,
+            $password,
         );
 
         return json_encode([
@@ -107,6 +109,7 @@ class UserController
         $name = trim($data->name);
         $email = trim($data->email);
         $username = trim($data->username);
+        $password = trim($data->password);
         
         $email = str_replace(' ', '', $email);
         $username = str_replace(' ', '', $username);
@@ -126,6 +129,7 @@ class UserController
                 $name,
                 $email,
                 $username,
+                $password,
             );
 
             return json_encode([
