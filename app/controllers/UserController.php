@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/../validators/UserValidator.php';
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../../models/User.php';
 
@@ -50,43 +51,45 @@ class UserController
             ]);
         }
 
-        $data = json_decode(file_get_contents("php://input"));
+        $data = json_decode(file_get_contents("php://input"), true);
 
         $user = new User($conn);
+        $validator = new UserValidator();
 
-        $name = trim($data->name);
-        $email = trim($data->email);
-        $username = trim($data->username);
-        $password = trim($data->password);
-        
-        $email = str_replace(' ', '', $email);
-        $username = str_replace(' ', '', $username);
+        $name = trim($data['name']);
+        $email = str_replace(' ', '', trim($data['email']));
+        $username = str_replace(' ', '', trim($data['username']));
+        $password = trim($data['password']);
 
-        if(!$name || !$email || !$username) {
+        try{
+            $validator->validateCreate($data);
+
+            if($user->emailExists($email)){
+                throw new Exception('Email already exists');
+            }
+
+            $user->postData(
+                $name,
+                $email,
+                $username,
+                $password,
+            );
+
+            return json_encode([
+                'status' => true,
+                'message' => 'User created successfully',
+                'name' => $name,
+                'email' => $email,
+                'username' => $username,
+            ]);
+        } catch (Exception $e) {
             http_response_code(400);
 
             return json_encode([
                 'status' => false,
-                'message' => 'All fields are required'
+                'message' => $e->getMessage()
             ]);
         }
-
-        $user->postData(
-            $name,
-            $email,
-            $username,
-            $password,
-        );
-
-        return json_encode([
-            [
-                'status' => true,
-                'message' => 'User create successfully',
-            ],
-            'name' => $name,
-            'email' => $email,
-            'username' => $username,
-        ]);
     }
 
 
@@ -101,20 +104,17 @@ class UserController
             ]);
         }
 
-        $data = json_decode(file_get_contents("php://input"));
+        $data = json_decode(file_get_contents("php://input"), true);
 
         $user = new User($conn);
 
-        $id = $data->id;
-        $name = trim($data->name);
-        $email = trim($data->email);
-        $username = trim($data->username);
-        $password = trim($data->password);
-        
-        $email = str_replace(' ', '', $email);
-        $username = str_replace(' ', '', $username);
+        $id = $data['id'];
+        $name = trim($data['name']);
+        $email = str_replace(' ', '', trim($data['email']));
+        $username = str_replace(' ', '', trim($data['username']));
+        $password = trim($data['password']);
 
-        if(!$id === null || !$name || !$email || !$username) {
+        if(!$id === null || !$name || !$email || !$username || !$password) {
             http_response_code(400);
 
             return json_encode([
@@ -133,10 +133,8 @@ class UserController
             );
 
             return json_encode([
-                [
-                    'status' => true,
-                    'message' => 'User updated successfully',
-                ],
+                'status' => true,
+                'message' => 'User updated successfully',
                 'name' => $name,
                 'email' => $email,
                 'username' => $username,

@@ -4,10 +4,12 @@ class User
 {
     private $dbh;
 
+    
     public function __construct($db)
     {
         $this->dbh = $db;
     }
+
 
     public function fetchAll()
     {
@@ -22,6 +24,7 @@ class User
 
         return $result;
     }
+
 
     public function postData($name, $email, $username, $password)
     {
@@ -39,6 +42,7 @@ class User
 
         return true;
     }
+
 
     public function updateData($id, $name, $email, $username, $password)
     {
@@ -63,6 +67,7 @@ class User
         return true;
     }
 
+
     public function deleteData($id)
     {
         $sth = $this->dbh->prepare(
@@ -78,5 +83,17 @@ class User
         }
 
         return true;
+    }
+
+
+    public function emailExists($email)
+    {
+        $sth = $this->dbh->prepare('SELECT id FROM users WHERE email = :email');
+
+        $sth->execute([
+            ':email' => $email
+        ]);
+
+        return $sth->fetch() ? true : false;
     }
 }
