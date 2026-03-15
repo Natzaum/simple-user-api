@@ -92,12 +92,7 @@ class UserController
             $username = str_replace(' ', '', trim($data['username']));
             $password = trim($data['password']);
 
-            if($id === null || empty($name) || empty($email) || empty($username) || empty($password)) {
-                throw new Exception('All fields are required');
-            }
-
             $validator->validateCreate($data);
-
 
             $user->updateData(
                 $id,
