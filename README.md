@@ -54,6 +54,7 @@ CREATE TABLE users (
   name VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   username VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
@@ -61,10 +62,7 @@ CREATE TABLE users (
 3. Optional seed data:
 
 ```sql
-INSERT INTO users (name, email, username)
-VALUES
-  ('Marco Paul', 'marco@example.com', 'marcop'),
-  ('Alice Paul', 'alice@example.com', 'alicep');
+SOURCE database/seeds/users.sql;
 ```
 
 4. Start the API server from project root:
@@ -112,13 +110,14 @@ Request body:
 {
   "name": "John Doe",
   "email": "john@example.com",
-  "username": "johnd"
+  "username": "johnd",
+  "password": "secret123"
 }
 ```
 
 Validation:
 
-- `name`, `email`, and `username` are required.
+- `name`, `email`, `username`, and `password` are required.
 
 ### `PUT /users`
 
@@ -131,13 +130,14 @@ Request body:
   "id": 1,
   "name": "John Doe",
   "email": "john@example.com",
-  "username": "johnd"
+  "username": "johnd",
+  "password": "secret123"
 }
 ```
 
 Validation:
 
-- `id`, `name`, `email`, and `username` are required.
+- `id`, `name`, `email`, `username`, and `password` are required.
 
 ### `DELETE /users`
 
@@ -169,7 +169,7 @@ Create user:
 ```bash
 curl -X POST http://localhost:8000/users \
   -H "Content-Type: application/json" \
-  -d '{"name":"John Doe","email":"john@example.com","username":"johnd"}'
+  -d '{"name":"John Doe","email":"john@example.com","username":"johnd","password":"secret123"}'
 ```
 
 Update user:
@@ -177,7 +177,7 @@ Update user:
 ```bash
 curl -X PUT http://localhost:8000/users \
   -H "Content-Type: application/json" \
-  -d '{"id":1,"name":"John Updated","email":"john@example.com","username":"johnd"}'
+  -d '{"id":1,"name":"John Updated","email":"john@example.com","username":"johnd","password":"secret123"}'
 ```
 
 Delete user:
